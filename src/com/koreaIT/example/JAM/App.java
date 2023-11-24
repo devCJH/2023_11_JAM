@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.koreaIT.example.JAM.dto.Article;
+import com.koreaIT.example.JAM.util.DBUtil;
+import com.koreaIT.example.JAM.util.SecSql;
 
 public class App {
 	public void run() {
 		Scanner sc = new Scanner(System.in);
 		
-		int lastArticleId = 0;
+//		int lastArticleId = 0;
 		
 		System.out.println("== 프로그램 시작 ==");
 		
@@ -40,27 +42,35 @@ public class App {
 						
 						System.out.println("== 게시물 작성 ==");
 						
-						lastArticleId++;
+//						lastArticleId++;
 						System.out.printf("제목 : ");
 						String title = sc.nextLine().trim();
 						System.out.printf("내용 : ");
 						String body = sc.nextLine().trim();
 						
-						try {
-							String sql = "INSERT INTO article";
-							sql += " SET regDate = NOW()";
-							sql += ", updateDate = NOW()";
-							sql += ", title = '" + title + "'";
-							sql += ", `body` = '" + body + "';";
-							
-							pstmt = conn.prepareStatement(sql);
-							pstmt.executeUpdate();
-							
-						} catch (SQLException e) {
-							System.out.println("에러: " + e);
-						}
+						SecSql sql = SecSql.from("INSERT INTO article");
+						sql.append("SET regDate = NOW()");
+						sql.append(", updateDate = NOW()");
+						sql.append(", title = ?", title);
+						sql.append(", `body` = ?", body);
 						
-						System.out.printf("%d번 게시물이 생성되었습니다\n", lastArticleId);
+						int id = DBUtil.insert(conn, sql);
+						
+//						try {
+//							String sql = "INSERT INTO article";
+//							sql += " SET regDate = NOW()";
+//							sql += ", updateDate = NOW()";
+//							sql += ", title = '" + title + "'";
+//							sql += ", `body` = '" + body + "';";
+//							
+//							pstmt = conn.prepareStatement(sql);
+//							pstmt.executeUpdate();
+//							
+//						} catch (SQLException e) {
+//							System.out.println("에러: " + e);
+//						}
+						
+						System.out.printf("%d번 게시물이 생성되었습니다\n", id);
 						
 					} else if (cmd.equals("article list")) {
 						
