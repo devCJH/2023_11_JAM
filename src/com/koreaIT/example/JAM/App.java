@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.koreaIT.example.JAM.dto.Article;
@@ -78,36 +79,45 @@ public class App {
 						
 						List<Article> articles = new ArrayList<>();
 						
-						try {
-							String sql = "SELECT * FROM article";
-							sql += " ORDER BY id DESC;";
-							
-							pstmt = conn.prepareStatement(sql);
-							rs = pstmt.executeQuery();
-							
-							while(rs.next()) {
-								int id = rs.getInt("id");
-								String regDate = rs.getString("regDate");
-								String updateDate = rs.getString("updateDate");
-								String title = rs.getString("title");
-								String body = rs.getString("body");
-								
-								Article article = new Article(id, regDate, updateDate, title, body);
-								articles.add(article);
-							}
-							
-						} catch (SQLException e) {
-							System.out.println("에러: " + e);
-						} 
+						SecSql sql = SecSql.from("SELECT * FROM article");
+						sql.append("ORDER BY id DESC");
+						
+						List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
+						
+						for (Map<String, Object> articleMap : articleListMap) {
+							articles.add(new Article(articleMap));
+						}
+						
+//						try {
+//							String sql = "SELECT * FROM article";
+//							sql += " ORDER BY id DESC;";
+//							
+//							pstmt = conn.prepareStatement(sql);
+//							rs = pstmt.executeQuery();
+//							
+//							while(rs.next()) {
+//								int id = rs.getInt("id");
+//								String regDate = rs.getString("regDate");
+//								String updateDate = rs.getString("updateDate");
+//								String title = rs.getString("title");
+//								String body = rs.getString("body");
+//								
+//								Article article = new Article(id, regDate, updateDate, title, body);
+//								articles.add(article);
+//							}
+//							
+//						} catch (SQLException e) {
+//							System.out.println("에러: " + e);
+//						} 
 						
 						if (articles.size() == 0) {
 							System.out.println("존재하는 게시물이 없습니다");
 							continue;
 						}
 						
-						System.out.println("번호	|	제목");
+						System.out.println("번호	|	제목	|	날짜");
 						for (Article article : articles) {
-							System.out.printf("%d	|	%s\n", article.id, article.title);
+							System.out.printf("%d	|	%s	|	%s\n", article.id, article.title, article.regDate);
 						}
 						
 					} else if (cmd.startsWith("article modify ")) {
