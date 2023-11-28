@@ -19,6 +19,8 @@ CREATE TABLE `member`(
 	`name` VARCHAR(20) NOT NULL
 );
 
+ALTER TABLE `member` MODIFY COLUMN loginId VARCHAR(50) NOT NULL UNIQUE;
+
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -35,4 +37,4 @@ loginPw = 'test1',
 SELECT * FROM article;
 SELECT * FROM `member`;
 
-TRUNCATE article;
+# TRUNCATE article;
