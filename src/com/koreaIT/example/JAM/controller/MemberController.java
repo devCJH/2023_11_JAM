@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.koreaIT.example.JAM.dto.Member;
 import com.koreaIT.example.JAM.service.MemberService;
 import com.koreaIT.example.JAM.session.Session;
+import com.koreaIT.example.JAM.util.Util;
 
 public class MemberController {
 	private Scanner sc;
@@ -141,6 +142,19 @@ public class MemberController {
 		
 		Session.logout();
 		System.out.println("로그아웃 되었습니다");
+	}
+
+	public void showProfile() {
+		if (Session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요");
+			return;
+		}
+		
+		System.out.println("== 마이 페이지 ==");
+		System.out.printf("가입일 : %s\n", Util.datetimeFormat(Session.getLoginedMember().regDate));
+		System.out.printf("수정일 : %s\n", Util.datetimeFormat(Session.getLoginedMember().updateDate));
+		System.out.printf("로그인 아이디 : %s\n", Session.getLoginedMember().loginId);
+		System.out.printf("이름 : %s\n", Session.getLoginedMember().name);
 	}
 	
 }
