@@ -41,7 +41,7 @@ public class ArticleDao {
 		sql.append("FROM article AS a");
 		sql.append("INNER JOIN `member` AS m");
 		sql.append("ON a.memberId = m.id");
-		sql.append("WHERE id = ?", id);
+		sql.append("WHERE a.id = ?", id);
 		
 		return DBUtil.selectRow(conn, sql);
 	}
@@ -68,5 +68,12 @@ public class ArticleDao {
 		sql.append("WHERE id = ?", id);
 		
 		DBUtil.delete(conn, sql);		
+	}
+
+	public Map<String, Object> getArticleById(int id) {
+		SecSql sql = SecSql.from("SELECT * FROM article");
+		sql.append("WHERE id = ?", id);
+		
+		return DBUtil.selectRow(conn, sql);
 	}
 }

@@ -58,4 +58,15 @@ public class ArticleService {
 	public void doDelete(int id) {
 		articleDao.doDelete(id);
 	}
+
+	public Article getArticleById(int id) {
+		
+		Map<String, Object> articleMap = articleDao.getArticleById(id);
+				
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		
+		return new Article(articleMap);
+	}
 }
