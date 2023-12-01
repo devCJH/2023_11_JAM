@@ -27,14 +27,20 @@ public class ArticleDao {
 	}
 
 	public List<Map<String, Object>> showList() {
-		SecSql sql = SecSql.from("SELECT * FROM article");
-		sql.append("ORDER BY id DESC");
+		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
+		sql.append("FROM article AS a");
+		sql.append("INNER JOIN `member` AS m");
+		sql.append("ON a.memberId = m.id");
+		sql.append("ORDER BY a.id DESC");
 		
 		return DBUtil.selectRows(conn, sql);
 	}
 
 	public Map<String, Object> showDetail(int id) {
-		SecSql sql = SecSql.from("SELECT * FROM article");
+		SecSql sql = SecSql.from("SELECT a.*, m.name AS `writerName`");
+		sql.append("FROM article AS a");
+		sql.append("INNER JOIN `member` AS m");
+		sql.append("ON a.memberId = m.id");
 		sql.append("WHERE id = ?", id);
 		
 		return DBUtil.selectRow(conn, sql);
